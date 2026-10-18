@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine erste JavaScript-Website</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #333333;
+            --muted: #777777;
+            --primary: #007bff;
+            --primary-dark: #0056b3;
+            --green: #28a745;
+            --red: #dc3545;
+            --border: #e2e5ea;
+        }
+
+        body.dark {
+            --bg: #16181d;
+            --card: #23262d;
+            --text: #e8e8e8;
+            --muted: #a0a4ab;
+            --border: #3a3e47;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        #clock {
+            font-size: 1.2rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #greeting {
+            text-align: center;
+            margin: 25px 16px 0;
+            font-size: 1.2rem;
+            color: var(--muted);
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background-color: var(--card);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        .counter-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--green);
+            transition: color 0.2s;
+        }
+
+        .counter-display.negative {
+            color: var(--red);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 4px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: var(--muted);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg);
+            color: var(--text);
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg);
+            color: var(--text);
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .message {
+            min-height: 1.5em;
+            margin: 12px 0 0;
+            font-weight: bold;
+        }
+
+        /* To-Do-Liste */
+        #todoList {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        #todoList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        #todoList li.done span {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+
+        #todoList li button {
+            background-color: var(--red);
+            padding: 4px 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Farb-Box */
+        #colorBox {
+            height: 100px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            background-color: #007bff;
+            transition: background-color 0.4s;
+        }
+
+        /* Stoppuhr */
+        #stopwatch {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Zitat */
+        blockquote {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            min-height: 60px;
+            transition: opacity 0.3s;
+        }
+
+        /* Würfel */
+        #dice {
+            font-size: 5rem;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        .roll {
+            animation: roll 0.5s ease-out;
+        }
+
+        @keyframes roll {
+            from { transform: rotate(0deg) scale(0.5); }
+            to { transform: rotate(720deg) scale(1); }
+        }
+
+        /* Fortschrittsbalken */
+        .bar {
+            height: 10px;
+            background-color: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--green);
+            transition: width 0.2s, background-color 0.2s;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Meine JavaScript-Spielwiese</h1>
+        <div>
+            <span id="clock">--:--:--</span>
+            <button id="themeBtn" class="secondary">🌙 Dunkel</button>
+        </div>
+    </header>
+
+    <p id="greeting"></p>
+
+    <main>
+
+        <!-- 1. Klicker -->
+        <div class="container">
+            <h2>Interaktiver Klicker</h2>
+            <p>Erhöhe oder verringere den Zähler.</p>
+            <div class="counter-display" id="counter">0</div>
+            <button id="minusBtn">−1</button>
+            <button id="clickBtn">+1</button>
+            <button id="resetBtn" class="secondary">Reset</button>
+        </div>
+
+        <!-- 2. To-Do-Liste -->
+        <div class="container">
+            <h2>To-Do-Liste</h2>
+            <input id="todoInput" type="text" placeholder="Neue Aufgabe eingeben...">
+            <button id="addTodoBtn">Hinzufügen</button>
+            <ul id="todoList"></ul>
+            <p id="todoCount" class="message"></p>
+        </div>
+
+        <!-- 3. Zahlenraten -->
+        <div class="container">
+            <h2>Zahlenraten</h2>
+            <p>Ich denke an eine Zahl zwischen 1 und 100.</p>
+            <input id="guessInput" type="number" min="1" max="100" placeholder="Dein Tipp">
+            <button id="guessBtn">Raten</button>
+            <button id="newGameBtn" class="secondary">Neues Spiel</button>
+            <p id="guessMessage" class="message"></p>
+            <p id="guessTries"></p>
+        </div>
+
+        <!-- 4. Farbwechsler -->
+        <div class="container">
+            <h2>Zufallsfarbe</h2>
+            <div id="colorBox">#007BFF</div>
+            <button id="colorBtn">Neue Farbe</button>
+            <button id="copyColorBtn" class="secondary">Kopieren</button>
+        </div>
+
+        <!-- 5. Stoppuhr -->
+        <div class="container">
+            <h2>Stoppuhr</h2>
+            <div id="stopwatch">00:00.0</div>
+            <button id="startBtn">Start</button>
+            <button id="stopBtn" class="secondary">Stopp</button>
+            <button id="swResetBtn" class="secondary">Reset</button>
+        </div>
+
+        <!-- 6. Zitat-Generator -->
+        <div class="container">
+            <h2>Zitat-Generator</h2>
+            <blockquote id="quote"></blockquote>
+            <button id="quoteBtn">Neues Zitat</button>
+        </div>
+
+        <!-- 7. Würfel -->
+        <div class="container">
+            <h2>Würfel</h2>
+            <div id="dice">🎲</div>
+            <p id="diceHistory">Noch nicht gewürfelt.</p>
+            <button id="diceBtn">Würfeln</button>
+        </div>
+
+        <!-- 8. Zeichenzähler -->
+        <div class="container">
+            <h2>Zeichenzähler</h2>
+            <textarea id="textInput" maxlength="200" placeholder="Schreib etwas..."></textarea>
+            <div class="bar"><div class="bar-fill" id="textBar"></div></div>
+            <p id="textStats">0 / 200 Zeichen · 0 Wörter</p>
+        </div>
+
+        <!-- 9. Taschenrechner -->
+        <div class="container">
+            <h2>Mini-Rechner</h2>
+            <input id="num1" type="number" placeholder="Zahl 1">
+            <input id="num2" type="number" placeholder="Zahl 2">
+            <button data-op="+">+</button>
+            <button data-op="-">−</button>
+            <button data-op="*">×</button>
+            <button data-op="/">÷</button>
+            <p id="calcResult" class="message">Ergebnis: –</p>
+        </div>
+
+    </main>
+
+    <footer id="footer"></footer>
+
+    <script>
+        // =========================================
+        // Kopfzeile: Uhr, Begrüßung, Dark Mode
+        // =========================================
+        const clock = document.getElementById('clock');
+
+        function updateClock() {
+            const now = new Date();
+            clock.textContent = now.toLocaleTimeString('de-DE');
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Begrüßung abhängig von der Uhrzeit
+        const hour = new Date().getHours();
+        let greetingText;
+        if (hour < 12) {
+            greetingText = 'Guten Morgen! ☀️';
+        } else if (hour < 18) {
+            greetingText = 'Guten Tag! 🌤️';
+        } else {
+            greetingText = 'Guten Abend! 🌙';
+        }
+        document.getElementById('greeting').textContent = greetingText + ' Probier die Karten unten aus.';
+
+        // Dark Mode umschalten und im Browser merken
+        const themeBtn = document.getElementById('themeBtn');
+
+        function applyTheme(isDark) {
+            document.body.classList.toggle('dark', isDark);
+            themeBtn.textContent = isDark ? '☀️ Hell' : '🌙 Dunkel';
+        }
+
+        applyTheme(localStorage.getItem('theme') === 'dark');
+
+        themeBtn.addEventListener('click', function() {
+            const isDark = !document.body.classList.contains('dark');
+            applyTheme(isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // =========================================
+        // 1. Klicker
+        // =========================================
+        let klickAnzahl = 0;
+        const anzeige = document.getElementById('counter');
+
+        function updateCounter() {
+            anzeige.textContent = klickAnzahl;
+            // Rote Farbe, wenn der Zähler negativ ist
+            anzeige.classList.toggle('negative', klickAnzahl < 0);
+        }
+
+        document.getElementById('clickBtn').addEventListener('click', function() {
+            klickAnzahl = klickAnzahl + 1;
+            updateCounter();
+        });
+
+        document.getElementById('minusBtn').addEventListener('click', function() {
+            klickAnzahl = klickAnzahl - 1;
+            updateCounter();
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            klickAnzahl = 0;
+            updateCounter();
+        });
+
+        // =========================================
+        // 2. To-Do-Liste (wird im localStorage gespeichert)
+        // =========================================
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const todoCount = document.getElementById('todoCount');
+
+        let todos = JSON.parse(localStorage.getItem('todos')) || [
+            { text: 'JavaScript lernen', done: false },
+            { text: 'Diese Aufgabe anklicken', done: false }
+        ];
+
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+
+            for (let i = 0; i < todos.length; i++) {
+                const li = document.createElement('li');
+                if (todos[i].done) {
+                    li.classList.add('done');
+                }
+
+                const span = document.createElement('span');
+                span.textContent = todos[i].text;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '✕';
+
+                // Klick auf die Aufgabe: erledigt / nicht erledigt
+                li.addEventListener('click', function() {
+                    todos[i].done = !todos[i].done;
+                    saveTodos();
+                    renderTodos();
+                });
+
+                // Klick auf ✕: Aufgabe löschen
+                deleteBtn.addEventListener('click', function(event) {
+                    event.stopPropagation(); // verhindert, dass auch das li-Klick-Event ausgelöst wird
+                    todos.splice(i, 1);
+                    saveTodos();
+                    renderTodos();
+                });
+
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
+                todoList.appendChild(li);
+            }
+
+            const open = todos.filter(function(todo) { return !todo.done; }).length;
+            todoCount.textContent = open + ' von ' + todos.length + ' Aufgaben offen';
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text === '') {
+                return;
+            }
+            todos.push({ text: text, done: false });
+            todoInput.value = '';
+            saveTodos();
+            renderTodos();
+        }
+
+        document.getElementById('addTodoBtn').addEventListener('click', addTodo);
+        todoInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                addTodo();
+            }
+        });
+
+        renderTodos();
+
+        // =========================================
+        // 3. Zahlenraten
+        // =========================================
+        const guessInput = document.getElementById('guessInput');
+        const guessMessage = document.getElementById('guessMessage');
+        const guessTries = document.getElementById('guessTries');
+        let secretNumber;
+        let tries;
+
+        function newGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            tries = 0;
+            guessMessage.textContent = '';
+            guessMessage.style.color = '';
+            guessTries.textContent = 'Versuche: 0';
+            guessInput.value = '';
+        }
+
+        function checkGuess() {
+            const guess = Number(guessInput.value);
+            if (!guess || guess < 1 || guess > 100) {
+                guessMessage.textContent = 'Bitte eine Zahl von 1 bis 100 eingeben.';
+                guessMessage.style.color = 'var(--red)';
+                return;
+            }
+
+            tries++;
+            guessTries.textContent = 'Versuche: ' + tries;
+
+            if (guess < secretNumber) {
+                guessMessage.textContent = guess + ' ist zu klein ⬆️';
+                guessMessage.style.color = 'var(--text)';
+            } else if (guess > secretNumber) {
+                guessMessage.textContent = guess + ' ist zu groß ⬇️';
+                guessMessage.style.color = 'var(--text)';
+            } else {
+                guessMessage.textContent = '🎉 Richtig! Es war die ' + secretNumber + '!';
+                guessMessage.style.color = 'var(--green)';
+            }
+            guessInput.value = '';
+            guessInput.focus();
+        }
+
+        document.getElementById('guessBtn').addEventListener('click', checkGuess);
+        document.getElementById('newGameBtn').addEventListener('click', newGame);
+        guessInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkGuess();
+            }
+        });
+
+        newGame();
+
+        // =========================================
+        // 4. Zufallsfarbe
+        // =========================================
+        const colorBox = document.getElementById('colorBox');
+
+        function randomColor() {
+            const chars = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += chars[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        document.getElementById('colorBtn').addEventListener('click', function() {
+            const color = randomColor();
+            colorBox.style.backgroundColor = color;
+            colorBox.textContent = color;
+        });
+
+        document.getElementById('copyColorBtn').addEventListener('click', function() {
+            const color = colorBox.textContent;
+            navigator.clipboard.writeText(color).then(function() {
+                colorBox.textContent = 'Kopiert! ✔';
+                setTimeout(function() {
+                    colorBox.textContent = color;
+                }, 1000);
+            });
+        });
+
+        // =========================================
+        // 5. Stoppuhr
+        // =========================================
+        const stopwatch = document.getElementById('stopwatch');
+        let elapsed = 0;       // vergangene Zeit in Zehntelsekunden
+        let timerId = null;    // ID von setInterval, null = Uhr steht
+
+        function formatTime(tenths) {
+            const minutes = Math.floor(tenths / 600);
+            const seconds = Math.floor((tenths % 600) / 10);
+            const rest = tenths % 10;
+            return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0') + '.' + rest;
+        }
+
+        document.getElementById('startBtn').addEventListener('click', function() {
+            if (timerId !== null) {
+                return; // läuft schon
+            }
+            timerId = setInterval(function() {
+                elapsed++;
+                stopwatch.textContent = formatTime(elapsed);
+            }, 100);
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', function() {
+            clearInterval(timerId);
+            timerId = null;
+        });
+
+        document.getElementById('swResetBtn').addEventListener('click', function() {
+            clearInterval(timerId);
+            timerId = null;
+            elapsed = 0;
+            stopwatch.textContent = formatTime(0);
+        });
+
+        // =========================================
+        // 6. Zitat-Generator
+        // =========================================
+        const quotes = [
+            '„Der beste Weg, die Zukunft vorherzusagen, ist, sie zu erschaffen.“',
+            '„Jeder Experte war einmal ein Anfänger.“',
+            '„Fehler sind Beweise dafür, dass du es versuchst.“',
+            '„Code ist wie Humor. Wenn man ihn erklären muss, ist er schlecht.“',
+            '„Erst lösen wir das Problem, dann schreiben wir den Code.“',
+            '„Übung macht den Meister.“',
+            '„Einfachheit ist die höchste Stufe der Vollendung.“'
+        ];
+        const quoteEl = document.getElementById('quote');
+        let lastQuoteIndex = -1;
+
+        function showQuote() {
+            let index;
+            // So lange würfeln, bis ein anderes Zitat als vorher kommt
+            do {
+                index = Math.floor(Math.random() * quotes.length);
+            } while (index === lastQuoteIndex);
+            lastQuoteIndex = index;
+
+            quoteEl.style.opacity = 0;
+            setTimeout(function() {
+                quoteEl.textContent = quotes[index];
+                quoteEl.style.opacity = 1;
+            }, 300);
+        }
+
+        document.getElementById('quoteBtn').addEventListener('click', showQuote);
+        showQuote();
+
+        // =========================================
+        // 7. Würfel
+        // =========================================
+        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        const dice = document.getElementById('dice');
+        const diceHistory = document.getElementById('diceHistory');
+        const rolls = [];
+
+        document.getElementById('diceBtn').addEventListener('click', function() {
+            const value = Math.floor(Math.random() * 6) + 1;
+            dice.textContent = diceFaces[value - 1];
+
+            // Animation neu starten
+            dice.classList.remove('roll');
+            void dice.offsetWidth;
+            dice.classList.add('roll');
+
+            rolls.push(value);
+            const sum = rolls.reduce(function(a, b) { return a + b; }, 0);
+            const average = (sum / rolls.length).toFixed(2);
+            diceHistory.textContent = 'Würfe: ' + rolls.length + ' · Letzte: ' + rolls.slice(-5).join(', ') + ' · Ø ' + average;
+        });
+
+        // =========================================
+        // 8. Zeichenzähler
+        // =========================================
+        const textInput = document.getElementById('textInput');
+        const textBar = document.getElementById('textBar');
+        const textStats = document.getElementById('textStats');
+        const maxChars = 200;
+
+        textInput.addEventListener('input', function() {
+            const text = textInput.value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const percent = (text.length / maxChars) * 100;
+
+            textBar.style.width = percent + '%';
+            if (percent > 90) {
+                textBar.style.backgroundColor = 'var(--red)';
+            } else if (percent > 70) {
+                textBar.style.backgroundColor = 'orange';
+            } else {
+                textBar.style.backgroundColor = 'var(--green)';
+            }
+
+            textStats.textContent = text.length + ' / ' + maxChars + ' Zeichen · ' + words + ' Wörter';
+        });
+
+        // =========================================
+        // 9. Mini-Rechner
+        // =========================================
+        const calcResult = document.getElementById('calcResult');
+        const opButtons = document.querySelectorAll('[data-op]');
+
+        opButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const a = parseFloat(document.getElementById('num1').value);
+                const b = parseFloat(document.getElementById('num2').value);
+
+                if (isNaN(a) || isNaN(b)) {
+                    calcResult.textContent = 'Bitte zwei Zahlen eingeben.';
+                    return;
+                }
+
+                let result;
+                switch (btn.dataset.op) {
+                    case '+': result = a + b; break;
+                    case '-': result = a - b; break;
+                    case '*': result = a * b; break;
+                    case '/':
+                        if (b === 0) {
+                            calcResult.textContent = 'Division durch 0 geht nicht!';
+                            return;
+                        }
+                        result = a / b;
+                        break;
+                }
+                calcResult.textContent = 'Ergebnis: ' + Math.round(result * 1000) / 1000;
+            });
+        });
+
+        // =========================================
+        // Footer mit aktuellem Jahr
+        // =========================================
+        document.getElementById('footer').textContent = '© ' + new Date().getFullYear() + ' · Gebaut mit HTML, CSS & JavaScript';
+    </script>
+
+</body>
+</html>
