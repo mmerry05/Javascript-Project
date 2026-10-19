@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +49,7 @@
             gap: 10px;
         }
 
-        header h1 {
+        header h1, h2 {
             margin: 0;
             font-size: 1.6rem;
         }
@@ -84,7 +85,7 @@
         }
 
         h2 {
-            color: var(--primary);
+           
             margin-top: 0;
             font-size: 1.3rem;
         }
@@ -157,7 +158,7 @@
 
         /* To-Do-Liste */
         #todoList {
-            
+            list-style: none;
             padding: 0;
             text-align: left;
         }
@@ -227,8 +228,13 @@
         }
 
         @keyframes roll {
-            from { transform: rotate(0deg) scale(0.5); }
-            to { transform: rotate(720deg) scale(1); }
+            from {
+                transform: rotate(0deg) scale(0.5);
+            }
+
+            to {
+                transform: rotate(720deg) scale(1);
+            }
         }
 
         /* Fortschrittsbalken */
@@ -254,10 +260,17 @@
         }
     </style>
 </head>
+
 <body>
+
 
     <header>
         <h1>Meine JavaScript-Spielwiese</h1>
+        <h2>Dieses Repository zeigt das fertige Ergebnis eines Universitätsprojekts aus meinem ersten Studienjahr. Da
+            ich zu diesem Zeitpunkt noch nicht mit der Versionsverwaltung über Git und GitHub vertraut war, wurde der
+            final entwickelte Code nachträglich in einem einzigen Schritt hochgeladen. In meinen aktuellen und
+            zukünftigen Projekten nutze ich Git und eine saubere Commit-Historie von Beginn an als festen Bestandteil
+            meines Workflows.</h2>
         <div>
             <span id="clock">--:--:--</span>
             <button id="themeBtn" class="secondary">🌙 Dunkel</button>
@@ -334,7 +347,9 @@
         <div class="container">
             <h2>Zeichenzähler</h2>
             <textarea id="textInput" maxlength="200" placeholder="Schreib etwas..."></textarea>
-            <div class="bar"><div class="bar-fill" id="textBar"></div></div>
+            <div class="bar">
+                <div class="bar-fill" id="textBar"></div>
+            </div>
             <p id="textStats">0 / 200 Zeichen · 0 Wörter</p>
         </div>
 
@@ -389,7 +404,7 @@
 
         applyTheme(localStorage.getItem('theme') === 'dark');
 
-        themeBtn.addEventListener('click', function() {
+        themeBtn.addEventListener('click', function () {
             const isDark = !document.body.classList.contains('dark');
             applyTheme(isDark);
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -407,17 +422,17 @@
             anzeige.classList.toggle('negative', klickAnzahl < 0);
         }
 
-        document.getElementById('clickBtn').addEventListener('click', function() {
+        document.getElementById('clickBtn').addEventListener('click', function () {
             klickAnzahl = klickAnzahl + 1;
             updateCounter();
         });
 
-        document.getElementById('minusBtn').addEventListener('click', function() {
+        document.getElementById('minusBtn').addEventListener('click', function () {
             klickAnzahl = klickAnzahl - 1;
             updateCounter();
         });
 
-        document.getElementById('resetBtn').addEventListener('click', function() {
+        document.getElementById('resetBtn').addEventListener('click', function () {
             klickAnzahl = 0;
             updateCounter();
         });
@@ -454,14 +469,14 @@
                 deleteBtn.textContent = '✕';
 
                 // Klick auf die Aufgabe: erledigt / nicht erledigt
-                li.addEventListener('click', function() {
+                li.addEventListener('click', function () {
                     todos[i].done = !todos[i].done;
                     saveTodos();
                     renderTodos();
                 });
 
                 // Klick auf ✕: Aufgabe löschen
-                deleteBtn.addEventListener('click', function(event) {
+                deleteBtn.addEventListener('click', function (event) {
                     event.stopPropagation(); // verhindert, dass auch das li-Klick-Event ausgelöst wird
                     todos.splice(i, 1);
                     saveTodos();
@@ -473,7 +488,7 @@
                 todoList.appendChild(li);
             }
 
-            const open = todos.filter(function(todo) { return !todo.done; }).length;
+            const open = todos.filter(function (todo) { return !todo.done; }).length;
             todoCount.textContent = open + ' von ' + todos.length + ' Aufgaben offen';
         }
 
@@ -489,7 +504,7 @@
         }
 
         document.getElementById('addTodoBtn').addEventListener('click', addTodo);
-        todoInput.addEventListener('keydown', function(event) {
+        todoInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
                 addTodo();
             }
@@ -542,7 +557,7 @@
 
         document.getElementById('guessBtn').addEventListener('click', checkGuess);
         document.getElementById('newGameBtn').addEventListener('click', newGame);
-        guessInput.addEventListener('keydown', function(event) {
+        guessInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
                 checkGuess();
             }
@@ -564,17 +579,17 @@
             return color;
         }
 
-        document.getElementById('colorBtn').addEventListener('click', function() {
+        document.getElementById('colorBtn').addEventListener('click', function () {
             const color = randomColor();
             colorBox.style.backgroundColor = color;
             colorBox.textContent = color;
         });
 
-        document.getElementById('copyColorBtn').addEventListener('click', function() {
+        document.getElementById('copyColorBtn').addEventListener('click', function () {
             const color = colorBox.textContent;
-            navigator.clipboard.writeText(color).then(function() {
+            navigator.clipboard.writeText(color).then(function () {
                 colorBox.textContent = 'Kopiert! ✔';
-                setTimeout(function() {
+                setTimeout(function () {
                     colorBox.textContent = color;
                 }, 1000);
             });
@@ -594,22 +609,22 @@
             return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0') + '.' + rest;
         }
 
-        document.getElementById('startBtn').addEventListener('click', function() {
+        document.getElementById('startBtn').addEventListener('click', function () {
             if (timerId !== null) {
                 return; // läuft schon
             }
-            timerId = setInterval(function() {
+            timerId = setInterval(function () {
                 elapsed++;
                 stopwatch.textContent = formatTime(elapsed);
             }, 100);
         });
 
-        document.getElementById('stopBtn').addEventListener('click', function() {
+        document.getElementById('stopBtn').addEventListener('click', function () {
             clearInterval(timerId);
             timerId = null;
         });
 
-        document.getElementById('swResetBtn').addEventListener('click', function() {
+        document.getElementById('swResetBtn').addEventListener('click', function () {
             clearInterval(timerId);
             timerId = null;
             elapsed = 0;
@@ -640,7 +655,7 @@
             lastQuoteIndex = index;
 
             quoteEl.style.opacity = 0;
-            setTimeout(function() {
+            setTimeout(function () {
                 quoteEl.textContent = quotes[index];
                 quoteEl.style.opacity = 1;
             }, 300);
@@ -657,7 +672,7 @@
         const diceHistory = document.getElementById('diceHistory');
         const rolls = [];
 
-        document.getElementById('diceBtn').addEventListener('click', function() {
+        document.getElementById('diceBtn').addEventListener('click', function () {
             const value = Math.floor(Math.random() * 6) + 1;
             dice.textContent = diceFaces[value - 1];
 
@@ -667,7 +682,7 @@
             dice.classList.add('roll');
 
             rolls.push(value);
-            const sum = rolls.reduce(function(a, b) { return a + b; }, 0);
+            const sum = rolls.reduce(function (a, b) { return a + b; }, 0);
             const average = (sum / rolls.length).toFixed(2);
             diceHistory.textContent = 'Würfe: ' + rolls.length + ' · Letzte: ' + rolls.slice(-5).join(', ') + ' · Ø ' + average;
         });
@@ -680,7 +695,7 @@
         const textStats = document.getElementById('textStats');
         const maxChars = 200;
 
-        textInput.addEventListener('input', function() {
+        textInput.addEventListener('input', function () {
             const text = textInput.value;
             const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
             const percent = (text.length / maxChars) * 100;
@@ -703,8 +718,8 @@
         const calcResult = document.getElementById('calcResult');
         const opButtons = document.querySelectorAll('[data-op]');
 
-        opButtons.forEach(function(btn) {
-            btn.addEventListener('click', function() {
+        opButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
                 const a = parseFloat(document.getElementById('num1').value);
                 const b = parseFloat(document.getElementById('num2').value);
 
@@ -737,4 +752,5 @@
     </script>
 
 </body>
+
 </html>
